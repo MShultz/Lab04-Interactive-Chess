@@ -1,0 +1,43 @@
+Process: Log file Initialized.
+Process: You entered no filepath. The program will now revert to Interaction Mode.
+Placement: Adding [Rla1] White Rook was placed at a1.
+Placement: Adding [Nlb1] White Knight was placed at b1.
+Placement: Adding [Blc1] White Bishop was placed at c1.
+Placement: Adding [Kle1] White King was placed at e1.
+Placement: Adding [Qld1] White Queen was placed at d1.
+Placement: Adding [Blf1] White Bishop was placed at f1.
+Placement: Adding [Nlg1] White Knight was placed at g1.
+Placement: Adding [Rlh1] White Rook was placed at h1.
+Placement: Adding [Pla2] White Pawn was placed at a2.
+Placement: Adding [Plb2] White Pawn was placed at b2.
+Placement: Adding [Plc2] White Pawn was placed at c2.
+Placement: Adding [Pld2] White Pawn was placed at d2.
+Placement: Adding [Ple2] White Pawn was placed at e2.
+Placement: Adding [Plf2] White Pawn was placed at f2.
+Placement: Adding [Plg2] White Pawn was placed at g2.
+Placement: Adding [Plh2] White Pawn was placed at h2.
+Placement: Adding [Rda8] Black Rook was placed at a8.
+Placement: Adding [Ndb8] Black Knight was placed at b8.
+Placement: Adding [Bdc8] Black Bishop was placed at c8.
+Placement: Adding [Kde8] Black King was placed at e8.
+Placement: Adding [Qdd8] Black Queen was placed at d8.
+Placement: Adding [Bdf8] Black Bishop was placed at f8.
+Placement: Adding [Ndg8] Black Knight was placed at g8.
+Placement: Adding [Rdh8] Black Rook was placed at h8.
+Placement: Adding [Pda7] Black Pawn was placed at a7.
+Placement: Adding [Pdb7] Black Pawn was placed at b7.
+Placement: Adding [Pdc7] Black Pawn was placed at c7.
+Placement: Adding [Pdd7] Black Pawn was placed at d7.
+Placement: Adding [Pde7] Black Pawn was placed at e7.
+Placement: Adding [Pdf7] Black Pawn was placed at f7.
+Placement: Adding [Pdg7] Black Pawn was placed at g7.
+Placement: Adding [Pdh7] Black Pawn was placed at h7.
+8|r|n|b|q|k|b|n|r|
+7|p|p|p|p|p|p|p|p|
+6| | | | | | | | |
+5| | | | | | | | |
+4| | | | | | | | |
+3| | | | | | | | |
+2|P|P|P|P|P|P|P|P|
+1|R|N|B|Q|K|B|N|R|
+  A B C D E F G H 
