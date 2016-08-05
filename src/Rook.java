@@ -44,7 +44,7 @@ public class Rook extends Piece {
 		Position newPos = new Position(p.getRank() + (1 * rankMultiplier), p.getFile() + (1 * fileMultiplier));
 		while (newPos.isValid() && !endFound) {
 			if (board[newPos.getRank()][newPos.getFile()] != null) {
-				if (isCapture) {
+				if (isCapture && this.isWhite() != board[newPos.getRank()][newPos.getFile()].isWhite()) {
 					positions.add(newPos);
 				}
 				endFound = true;

@@ -30,12 +30,12 @@ public class Board {
 		if (board[position1.getRank()][position1.getFile()] != null) {
 			if (isValid(position1, position2, isWhite, placement, piece)) {
 				Piece p = getPiece(position1);
-				if(isValidPieceMovement(handler.isCapture(placement), p, position2)){
-				board[position1.getRank()][position1.getFile()] = null;
-				p.setHasMoved();
-				p.setCurrentPosition(position2);
-				board[position2.getRank()][position2.getFile()] = p;
-				sucessfulMove = true;
+				if (isValidPieceMovement(handler.isCapture(placement), p, position2)) {
+					board[position1.getRank()][position1.getFile()] = null;
+					p.setHasMoved();
+					p.setCurrentPosition(position2);
+					board[position2.getRank()][position2.getFile()] = p;
+					sucessfulMove = true;
 				}
 			}
 		}
@@ -84,6 +84,24 @@ public class Board {
 			}
 		}
 		writer.writeToFile("  A B C D E F G H ");
+	}
+
+	public void printBoardToConsole() {
+		for (int i = BOARD_SIZE - 1; i >= 0; --i) {
+			String boardString = "";
+			for (int j = 0; j < BOARD_SIZE; ++j) {
+				if (j == 0) {
+					boardString += (i + 1) + "|" + getPieceStringForBoard(i, j);
+				} else {
+					boardString += "|" + getPieceStringForBoard(i, j);
+				}
+				if (j == 7) {
+					boardString += "|";
+					System.out.println(boardString);
+				}
+			}
+		}
+		System.out.println("  A B C D E F G H ");
 	}
 
 	private String getPieceStringForBoard(int y, int x) {
@@ -201,5 +219,26 @@ public class Board {
 			}
 		}
 		return found;
+	}
+
+	// *****************************************************************************//
+	// **********************************FOR
+	// Interactivity**************************//
+
+	public ArrayList<Piece> getAllPossiblePieces(boolean isWhite) {
+		ArrayList<Piece> possiblePieces = new ArrayList<Piece>();
+		for (Piece[] p : board) {
+			for (Piece piece : p) {
+				if (piece != null) {
+					if (piece.isWhite() == isWhite && piece.getMovement(board, true).size() > 0) {
+						possiblePieces.add(piece);
+					}
+				}
+			}
+		}
+		return possiblePieces;
+	}
+	public Piece[][] getBoard(){
+		return board;
 	}
 }

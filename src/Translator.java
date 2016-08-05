@@ -13,6 +13,7 @@ public class Translator {
 	BufferedReader file = null;
 	Board board;
 	DirectiveHandler handler;
+	UserInterface ui;
 	boolean interactionMode = false;
 
 	public Translator(String fileName, boolean containedFile) {
@@ -35,34 +36,62 @@ public class Translator {
 		finder = new DirectiveFinder();
 		handler = new DirectiveHandler();
 		board = new Board(writer);
+		ui = new UserInterface();
 	}
 
 	public void translate() {
 		if (!interactionMode) {
 			translateFile();
-		} else {
-			interactionMode();
 		}
+		interactionMode();
+		shutdown();
 	}
 
-	private void interactionMode(){
-		setUpBoard();
+	public void interactionMode() {
+		boolean quit = false;
+		if (interactionMode) {
+			setUpBoard();
+		}
+		int count = 1;
+		do {
+			int piece;
+			boolean isWhite = (count % 2 != 0);
+			ui.inform(isWhite);
+			ArrayList<Piece> pieces = board.getAllPossiblePieces(isWhite);
+			piece = ui.determinePiece(pieces);
+			if (piece == 0) {
+				quit = true;
+			} else {
+				Piece current = pieces.get(piece - 1);
+				ArrayList<Position> possibleMoves = current.getMovement(board.getBoard(),
+						(current.getType() == PieceType.PAWN ? false : true));
+				int move = ui.determineMove(possibleMoves);
+				if (move == 0) {
+					quit = true;
+				} else {
+					// process movement;
+				}
+			}
+			++count;
+		} while (!quit);
+
 		board.writeBoard();
 	}
-	
-	private void setUpBoard(){
+
+	private void setUpBoard() {
 		BufferedReader initializer;
 		try {
 			FileInputStream inputStream = new FileInputStream("src/BoardInitialization.chess");
 			initializer = new BufferedReader(new InputStreamReader(inputStream));
-			while(initializer.ready()){
+			while (initializer.ready()) {
 				processPlacement(initializer.readLine().trim());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
+
 	private void translateFile() {
 		try {
 			while (file.ready()) {
@@ -74,7 +103,9 @@ public class Translator {
 					if (finder.isPlacement(currentLine)) {
 						processPlacement(currentLine);
 					} else if (finder.isMovement(currentLine)) {
-						processMovement(currentLine);
+						ArrayList<String> movements = finder.getMovementDirectives(currentLine);
+						processMovement(movements.get(0), true);
+						processMovement(movements.get(1), false);
 					} else if (finder.containsCastle(currentLine)) {
 						processCastling(currentLine);
 
@@ -83,8 +114,6 @@ public class Translator {
 					}
 				}
 			}
-			board.writeBoard();
-			shutdown();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -123,24 +152,17 @@ public class Translator {
 		}
 	}
 
-	private void processMovement(String currentLine) throws Exception {
+	private void processMovement(String currentMovement, boolean isFirstMovement) throws Exception {
 		if (!movementBegun) {
 			movementBegun = true;
 		}
-		ArrayList<String> movements = finder.getMovementDirectives(currentLine);
-		boolean movement1Valid = board.movePiece(movements.get(0), true);
-		if (movement1Valid) {
-			writer.writeToFile(format.formatMovement(movements.get(0), true));
+
+		boolean movementValid = board.movePiece(currentMovement, isFirstMovement);
+		if (movementValid) {
+			writer.writeToFile(format.formatMovement(currentMovement, isFirstMovement));
 			board.writeBoard();
 		} else {
-			writeFirstMovementError(movements.get(0));
-		}
-		boolean movement2Valid = board.movePiece(movements.get(1), false);
-		if (movement2Valid) {
-			writer.writeToFile(format.formatMovement(movements.get(1), false));
-			board.writeBoard();
-		} else {
-			writeSecondMovementError(movements.get(1));
+			writeMovementError(currentMovement, isFirstMovement);
 		}
 	}
 
@@ -160,7 +182,7 @@ public class Translator {
 						if (board.movePiece(lineAction.get(0), true)) {
 							writer.writeToFile(format.formatMovement(lineAction.get(0), true));
 						} else {
-							writeFirstMovementError(lineAction.get(0));
+							writeMovementError(lineAction.get(0), true);
 						}
 					}
 					if (finder.isCastle(lineAction.get(1))) {
@@ -174,7 +196,7 @@ public class Translator {
 						if (board.movePiece(lineAction.get(1), false)) {
 							writer.writeToFile(format.formatMovement(lineAction.get(1), false));
 						} else {
-							writeSecondMovementError(lineAction.get(1));
+							writeMovementError(lineAction.get(1), false);
 						}
 					}
 				}
@@ -200,7 +222,8 @@ public class Translator {
 	public void shutdown() {
 		try {
 			writer.writeToFile("Process: Closing Files.");
-			file.close();
+			if (file != null)
+				file.close();
 			writer.closeLogFile();
 
 		} catch (IOException e) {
@@ -209,19 +232,11 @@ public class Translator {
 
 	}
 
-	private void writeFirstMovementError(String movement) {
+	private void writeMovementError(String movement, boolean isWhite) {
 		Position pos1 = new Position(handler.getInitialRank(movement, true), handler.getInitialFile(movement, true));
 		Position pos2 = new Position(handler.getSecondaryRank(movement), handler.getSecondaryFile(movement));
-		String s = format.formatInvalidMovement(board, pos1, pos2, true, movement,
-				handler.getPieceChar(movement, true));
-		writer.writeToFile(s);
-	}
-
-	private void writeSecondMovementError(String movement) {
-		Position pos1 = new Position(handler.getInitialRank(movement, true), handler.getInitialFile(movement, true));
-		Position pos2 = new Position(handler.getSecondaryRank(movement), handler.getSecondaryFile(movement));
-		String s = format.formatInvalidMovement(board, pos1, pos2, false, movement,
-				handler.getPieceChar(movement, false));
+		String s = format.formatInvalidMovement(board, pos1, pos2, isWhite, movement,
+				handler.getPieceChar(movement, isWhite));
 		writer.writeToFile(s);
 	}
 

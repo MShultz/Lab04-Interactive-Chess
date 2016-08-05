@@ -15,8 +15,9 @@ public class Knight extends Piece {
 		for (Position pos : changeInPosition) {
 			Position newPos = new Position(p.getRank() + pos.getRank(), p.getFile() + pos.getFile());
 			if (newPos.isValid()) {
-				if ((isCapture && board[newPos.getRank()][newPos.getFile()] != null)
-						|| (!isCapture && board[newPos.getRank()][newPos.getFile()] == null)) {
+				if ((isCapture && board[newPos.getRank()][newPos.getFile()] != null
+						&& this.isWhite() != board[newPos.getRank()][newPos.getFile()].isWhite())
+						|| (board[newPos.getRank()][newPos.getFile()] == null)) {
 					possiblePositions.add(newPos);
 				}
 			}
