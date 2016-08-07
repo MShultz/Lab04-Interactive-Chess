@@ -52,12 +52,18 @@ public class Translator {
 		if (interactionMode) {
 			setUpBoard();
 		}
+		board.writeBoard();
+		board.printBoardToConsole();
 		int count = 1;
 		do {
 			int piece;
+			boolean pieceChosen;
 			boolean isWhite = (count % 2 != 0);
 			ui.inform(isWhite);
 			ArrayList<Piece> pieces = board.getAllPossiblePieces(isWhite);
+			
+			do{
+			pieceChosen = true;
 			piece = ui.determinePiece(pieces);
 			if (piece == 0) {
 				quit = true;
@@ -65,15 +71,34 @@ public class Translator {
 				Piece current = pieces.get(piece - 1);
 				ArrayList<Position> possibleMoves = current.getMovement(board.getBoard(),
 						(current.getType() == PieceType.PAWN ? false : true));
+				if (current.getType() == PieceType.KING || current.getType() == PieceType.ROOK) {
+					if (board.isValidCastle("O-O-O", isWhite))
+						possibleMoves.add(new Position(-1, -1)); // Queen Side
+					if (board.isValidCastle("O-O", isWhite))
+						possibleMoves.add(new Position(8, 8)); // King Side
+				}
+				board.printBoardToConsole();
 				int move = ui.determineMove(possibleMoves);
 				if (move == 0) {
 					quit = true;
-				} else {
-					// process movement;
+				}else if(move == 1){
+					pieceChosen = false;
+				}	else {
+					String movement = getCompleteMovement(pieces.get(piece - 1), possibleMoves.get(move - 2));
+					if (movement.contains("O")) {
+						board.castle(isWhite, movement);
+						writer.writeToFile(format.formatCastle(movement, isWhite));
+					} else
+						processMovement(movement, isWhite);
 				}
 			}
+			}while(!pieceChosen);
+			
+			
+			
 			++count;
-		} while (!quit);
+			board.printBoardToConsole();
+		} while (!quit && board.isPlayable());
 
 		board.writeBoard();
 	}
@@ -152,7 +177,7 @@ public class Translator {
 		}
 	}
 
-	private void processMovement(String currentMovement, boolean isFirstMovement) throws Exception {
+	private void processMovement(String currentMovement, boolean isFirstMovement) {
 		if (!movementBegun) {
 			movementBegun = true;
 		}
@@ -238,6 +263,24 @@ public class Translator {
 		String s = format.formatInvalidMovement(board, pos1, pos2, isWhite, movement,
 				handler.getPieceChar(movement, isWhite));
 		writer.writeToFile(s);
+	}
+
+	private String getCompleteMovement(Piece piece, Position position) {
+		String movement;
+		if (position.file == -1)
+			movement = "O-O-O";
+		else if (position.file == 8)
+			movement = "O-O";
+		else {
+			Piece[][] currentBoard = board.getBoard();
+			Position piecePostion = piece.getCurrentPosition();
+			movement = "" + (piece.getType() == PieceType.PAWN ? "" : piece.getType().getWhiteType())
+					+ Character.toLowerCase(ui.getFileLetter(piecePostion.getFile())) + (piecePostion.getRank() + 1);
+			movement += (currentBoard[position.getRank()][position.getFile()] == null ? "-" : "x");
+			movement += Character.toLowerCase(ui.getFileLetter(position.getFile()));
+			movement += (position.getRank() + 1);
+		}
+		return movement;
 	}
 
 }

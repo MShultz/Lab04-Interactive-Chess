@@ -7,19 +7,26 @@ public class Pawn extends Piece {
 	}
 
 	public ArrayList<Position> getMovement(Piece[][] board, boolean isCapture) {
-		ArrayList<Position> movements = (isCapture ? getPossibleCaptures() : getPossibleMovements(board));
+		ArrayList<Position> movements = getPossibleMovements(board);
+		movements.addAll(getPossibleCaptures(board));
 		return movements;
 
 	}
 
-	private ArrayList<Position> getPossibleCaptures() {
+	private ArrayList<Position> getPossibleCaptures(Piece[][] board) {
 		ArrayList<Position> captures = new ArrayList<Position>();
 		int multiplier = (this.isWhite() ? 1 : -1);
 		Position p = this.getCurrentPosition();
-		if (p.getFile() - 1 >= 0 && p.getRank()+1< 8 && p.getRank()-1 >= 0)
-			captures.add(new Position(p.getRank() + (1 * multiplier), p.getFile() - 1 ));
-		if (p.getFile() + 1 < 8 && p.getRank()+1< 8 && p.getRank()-1 >= 0)
-			captures.add(new Position(p.getRank() + (1 * multiplier), p.getFile() + 1 ));
+		if (p.getFile() - 1 >= 0 && p.getRank() + 1 < 8 && p.getRank() - 1 >= 0)
+			if (board[p.getRank() + (1 * multiplier)][p.getFile() - 1] != null) {
+				if (board[p.getRank() + (1 * multiplier)][p.getFile() - 1].isWhite() != this.isWhite())
+					captures.add(new Position(p.getRank() + (1 * multiplier), p.getFile() - 1));
+			}
+		if (p.getFile() + 1 < 8 && p.getRank() + 1 < 8 && p.getRank() - 1 >= 0)
+			if (board[p.getRank() + (1 * multiplier)][p.getFile() + 1] != null) {
+				if (board[p.getRank() + (1 * multiplier)][p.getFile() + 1].isWhite() != this.isWhite())
+					captures.add(new Position(p.getRank() + (1 * multiplier), p.getFile() + 1));
+			}
 		return captures;
 	}
 

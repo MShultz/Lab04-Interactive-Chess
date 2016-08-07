@@ -45,7 +45,7 @@ public class King extends Piece {
 			Position newPos = new Position(p.getRank() + pos.getRank(), p.getFile() + pos.getFile());
 			if (newPos.isValid()) {
 				if ((isCapture && board[newPos.getRank()][newPos.getFile()] != null && this.isWhite() != board[newPos.getRank()][newPos.getFile()].isWhite())
-						|| (!isCapture && board[newPos.getRank()][newPos.getFile()] == null)) {
+						|| (board[newPos.getRank()][newPos.getFile()] == null)) {
 					possiblePositions.add(newPos);
 				}
 			}

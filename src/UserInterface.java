@@ -20,8 +20,14 @@ public class UserInterface {
 
 	private void promptForMove(ArrayList<Position> possibleMoves) {
 		System.out.println("0. Exit");
-		int count = 1;
+		System.out.println("1. Go Back");
+		int count = 2;
 		for (Position p : possibleMoves) {
+			if(p.getFile() == -1)
+				System.out.println(count + ". castle Queen Side");
+			else if(p.getFile() == 8)
+				System.out.println(count + ". Castle King side");
+			else
 			System.out.println(count + ". " + getMoveString(p));
 			++count;
 		}
@@ -59,6 +65,11 @@ public class UserInterface {
 	}
 
 	private void ensureMove(Position p) {
+		if(p.file == -1)
+			System.out.println("Was this your choice? Castling queen side");
+		else if(p.file == 8)
+			System.out.println("Was this your choice? Castling king side");
+		else
 		System.out.println("Was this your choice? " + getMoveString(p));
 		System.out.println("0. Yes");
 		System.out.println("1. No");
@@ -75,7 +86,7 @@ public class UserInterface {
 		return ("" + getFileLetter(p.getFile()) + (p.getRank()+1));
 	}
 
-	private char getFileLetter(int file) {
+	public char getFileLetter(int file) {
 		int i = ((file) + CHAR_CONVERT_NUM);
 		return (char) i;
 	}
@@ -113,8 +124,11 @@ public class UserInterface {
 				int choice = getChoice(1);
 				if (choice == 0)
 					correctMove = true;
-			} else {
-				ensureMove(moves.get(move - 1));
+			}else if(move == 1){
+				correctMove = true;
+			}
+			else {
+				ensureMove(moves.get(move - 2));
 				int choice = getChoice(1);
 				if (choice == 0) {
 					correctMove = true;

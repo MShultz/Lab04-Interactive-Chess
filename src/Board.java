@@ -238,7 +238,19 @@ public class Board {
 		}
 		return possiblePieces;
 	}
-	public Piece[][] getBoard(){
+
+	public Piece[][] getBoard() {
 		return board;
+	}
+
+	public boolean isPlayable() {
+		boolean playable = false;
+		for (Piece[] rows : board) {
+			for (Piece p : rows) {
+				if (p != null)
+					playable = true;
+			}
+		}
+		return playable;
 	}
 }
