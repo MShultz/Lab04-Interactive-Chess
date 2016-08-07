@@ -35,8 +35,8 @@ public class UserInterface {
 
 	public void ensureQuit() {
 		System.out.println("Are you sure?");
-		System.out.println("0. Yes");
-		System.out.println("1. No");
+		System.out.println("0. No");
+		System.out.println("1. Yes");
 
 	}
 
@@ -59,8 +59,8 @@ public class UserInterface {
 
 	private void ensurePiece(Piece p) {
 		System.out.println("Was this your choice? " + getPieceString(p));
-		System.out.println("0. Yes");
-		System.out.println("1. No");
+		System.out.println("0. No");
+		System.out.println("1. Yes");
 
 	}
 
@@ -71,8 +71,8 @@ public class UserInterface {
 			System.out.println("Was this your choice? Castling king side");
 		else
 		System.out.println("Was this your choice? " + getMoveString(p));
-		System.out.println("0. Yes");
-		System.out.println("1. No");
+		System.out.println("0. No");
+		System.out.println("1. Yes");
 	}
 
 	private String getPieceString(Piece p) {
@@ -100,12 +100,12 @@ public class UserInterface {
 			if (piece == 0) {
 				ensureQuit();
 				int choice = getChoice(1);
-				if (choice == 0)
+				if (choice == 1)
 					correctPiece = true;
 			} else {
 				ensurePiece(pieces.get(piece - 1));
 				int choice = getChoice(1);
-				if (choice == 0) {
+				if (choice == 1) {
 					correctPiece = true;
 				}
 			}
@@ -122,7 +122,7 @@ public class UserInterface {
 			if (move == 0) {
 				ensureQuit();
 				int choice = getChoice(1);
-				if (choice == 0)
+				if (choice == 1)
 					correctMove = true;
 			}else if(move == 1){
 				correctMove = true;
@@ -130,7 +130,7 @@ public class UserInterface {
 			else {
 				ensureMove(moves.get(move - 2));
 				int choice = getChoice(1);
-				if (choice == 0) {
+				if (choice == 1) {
 					correctMove = true;
 				}
 			}
