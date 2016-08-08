@@ -43,6 +43,9 @@ public class Translator {
 		if (!interactionMode) {
 			translateFile();
 		}
+		writer.writeToFile("----------------------------------");
+		writer.writeToFile("Process: Interactive Mode enabled.");
+		writer.writeToFile("----------------------------------");
 		interactionMode();
 		shutdown();
 	}

@@ -118,7 +118,7 @@ public class UserInterface {
 		int move;
 		do {
 			promptForMove(moves);
-			move = getChoice(moves.size());
+			move = getChoice(moves.size()+1);
 			if (move == 0) {
 				ensureQuit();
 				int choice = getChoice(1);
