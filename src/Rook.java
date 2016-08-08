@@ -21,7 +21,7 @@ public class Rook extends Piece {
 		if (isWhite()) {
 			location = new Position(0, 5);
 		} else {
-			location = new Position(0, 5);
+			location = new Position(7, 5);
 		}
 		return location;
 	}
